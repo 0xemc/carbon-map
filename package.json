@@ -34,7 +34,11 @@
 		"vite": "^4.4.2"
 	},
 	"dependencies": {
+		"@floating-ui/dom": "^1.4.5",
 		"@mapbox/mapbox-gl-draw": "^1.4.2",
-		"mapbox-gl": "^2.15.0"
+		"flowbite": "^1.7.0",
+		"flowbite-svelte": "^0.40.1",
+		"mapbox-gl": "^2.15.0",
+		"tailwind-merge": "^1.14.0"
 	}
 }

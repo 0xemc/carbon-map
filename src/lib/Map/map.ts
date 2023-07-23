@@ -1,8 +1,7 @@
 import mapboxgl, { Map, type MapboxOptions } from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 
-mapboxgl.accessToken =
-	'pk.eyJ1IjoibWljY29sbGlucyIsImEiOiJja3NuMnRrNzkxY2V2MndwYzBueGlpM3d3In0.cMsNf8d1KlEQnvXRVvG3ig';
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_GL_KEY;
 
 const config: Partial<MapboxOptions> = {
 	// Choose from Mapbox's core styles, or make your own style with Mapbox Studio

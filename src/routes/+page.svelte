@@ -1,9 +1,37 @@
-<script>
+<script lang="ts">
 	import Map from '$lib/Map/Map.svelte';
 	import { Card } from 'flowbite-svelte';
+	import type { MapEvent, MapMetrics } from '$lib/Map/map.types';
+
+	const DEFAULT_METRICS: MapMetrics = {
+		trees: '-',
+		area: '-'
+	};
+
+	let metrics = DEFAULT_METRICS;
+
+	const handleUpdate = (e: MapEvent) => {
+		const coords = e.features?.at(0)?.geometry.coordinates;
+		fetchMetrics(coords);
+	};
+
+	const fetchMetrics = async (coords: any) => {
+		const resp = await fetch('/api', { method: 'POST', body: JSON.stringify(coords) });
+		metrics = await resp.json();
+	};
 </script>
 
-<Map />
+<Map
+	handlers={[
+		[['draw.create', 'draw.update'], handleUpdate],
+		[
+			['draw.delete'],
+			() => {
+				metrics = DEFAULT_METRICS;
+			}
+		]
+	]}
+/>
 <div id="overlay" class="p-8">
 	<Card class="flex space-y-6">
 		<hr class="w-6" />
@@ -23,7 +51,7 @@
 				>
 				<span class="flex text-white space-x-2"
 					><img src="icons/tree.svg" alt="tree" />
-					<p>2,173</p></span
+					<p>{metrics.trees}</p></span
 				>
 			</div>
 		</div>
@@ -64,7 +92,7 @@
 			<div class="grid grid-cols-2 space-x-3">
 				<span class="flex text-white space-x-2">
 					<img src="icons/area.svg" alt="area" />
-					<p>21,31 m<sup>2</sup></p>
+					<p>{metrics.area}</p>
 				</span>
 				<span class="flex text-white space-x-2">
 					<img src="icons/water-soil.svg" alt="water-soil" />

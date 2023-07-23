@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import numeral from 'numeral';
 import * as turf from '@turf/turf';
-import { pipe } from 'fp-ts/function';
+import { pipe } from 'fp-ts/lib/function';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const args = {

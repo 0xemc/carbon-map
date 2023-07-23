@@ -2,10 +2,12 @@
 	import Map from '$lib/Map/Map.svelte';
 	import { Card } from 'flowbite-svelte';
 	import type { MapEvent, MapMetrics } from '$lib/Map/map.types';
+	import numeral from 'numeral';
 
 	const DEFAULT_METRICS: MapMetrics = {
 		trees: '-',
-		area: '-'
+		area: '-',
+		coverage: 0
 	};
 
 	let metrics = DEFAULT_METRICS;
@@ -47,7 +49,7 @@
 			<div class="grid grid-cols-2">
 				<span class="flex text-white space-x-2"
 					><img src="icons/leaf.svg" alt="leaf" />
-					<p>73%</p></span
+					<p>{metrics.coverage}%</p></span
 				>
 				<span class="flex text-white space-x-2"
 					><img src="icons/tree.svg" alt="tree" />

@@ -1,6 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import numeral from 'numeral';
 import * as turf from '@turf/turf';
+import { pipe } from 'fp-ts/function';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const args = {
@@ -19,16 +20,19 @@ export const POST: RequestHandler = async ({ request }) => {
 			return numeral(area).format('0,0.00') + ' m²';
 		}
 	}
+	const seed = random(0.3, 0.6);
+	const area = pipe(coords, turf.polygon, turf.area);
+	const coverage = (seed * 100).toFixed(1);
+	const trees = numeral(seed * area).format('0,0');
 
-	function computeArea(coords: any) {
-		const data = turf.polygon(coords);
-		const area = turf.area(data);
-		return formatArea(area);
-	}
-
-	const result: any = {
-		trees: Math.floor(Math.random() * 1000),
-		area: computeArea(coords)
+	const result = {
+		coverage,
+		trees,
+		area: formatArea(area)
 	};
 	return new Response(JSON.stringify(result), args);
 };
+
+function random(min: number, max: number) {
+	return Math.random() * (max - min) + min;
+}

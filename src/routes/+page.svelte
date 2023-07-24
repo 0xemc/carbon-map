@@ -7,7 +7,8 @@
 	const DEFAULT_METRICS: MapMetrics = {
 		trees: '-',
 		area: '-',
-		coverage: 0
+		coverage: 0,
+		carbon: 0
 	};
 
 	let metrics = DEFAULT_METRICS;
@@ -21,6 +22,14 @@
 		const resp = await fetch('/api', { method: 'POST', body: JSON.stringify(coords) });
 		metrics = await resp.json();
 	};
+
+	function formatCarbon(carbon: number) {
+		if (carbon >= 1000) {
+			return numeral(carbon / 1000).format('0,0');
+		} else {
+			return numeral(carbon).format('0,0');
+		}
+	}
 </script>
 
 <Map
@@ -39,7 +48,9 @@
 		<hr class="w-6" />
 		<div class="flex">
 			<h2 class="text-6xl text-white">
-				20.4<sub class="text-base">T</sub>
+				{formatCarbon(metrics.carbon)}<sub class="text-base"
+					>{#if metrics.carbon < 1000}T{:else} MT{/if}</sub
+				>
 			</h2>
 			<sub class="text-xs justify-end align-bottom">CO2/m2</sub>
 		</div>

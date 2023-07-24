@@ -52,7 +52,7 @@
 					>{#if metrics.carbon < 1000}T{:else} MT{/if}</sub
 				>
 			</h2>
-			<sub class="text-xs justify-end align-bottom">CO2/m2</sub>
+			<sub class="text-xs justify-end align-bottom">CO2</sub>
 		</div>
 		<hr class="border-" />
 		<div class="space-y-4">

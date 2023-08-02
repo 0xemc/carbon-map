@@ -21,6 +21,7 @@
 	const fetchMetrics = async (coords: any) => {
 		const resp = await fetch('/api', { method: 'POST', body: JSON.stringify(coords) });
 		metrics = await resp.json();
+		console.log(metrics.trees);
 	};
 
 	function formatCarbon(carbon: number) {
@@ -64,7 +65,7 @@
 				>
 				<span class="flex text-white space-x-2"
 					><img src="icons/tree.svg" alt="tree" />
-					<p>{metrics.trees}</p></span
+					<p>{metrics.trees.length}</p></span
 				>
 			</div>
 		</div>

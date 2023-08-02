@@ -2,11 +2,11 @@ import type { RequestHandler } from '@sveltejs/kit';
 import numeral from 'numeral';
 import * as turf from '@turf/turf';
 import { pipe } from 'fp-ts/lib/function';
-import { Pool } from 'pg';
+import pg from 'pg';
 
 const POST_GRES_URL = import.meta.env.VITE_API_NEON_URL;
 
-const pool = new Pool({
+const pool = new pg.Pool({
 	ssl: {
 		rejectUnauthorized: false
 	},

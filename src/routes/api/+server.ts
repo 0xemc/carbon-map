@@ -24,6 +24,21 @@ function formatArea(area: number) {
 	}
 }
 
+export type Tree = {
+	geom: string;
+	image_path: string;
+	lat: number;
+	lon: number;
+	score: number;
+};
+
+export type FetchMetricsResponse = {
+	carbon: number;
+	area: string;
+	coverage: number;
+	trees: Tree[];
+};
+
 export const POST: RequestHandler = async ({ request }) => {
 	const args = {
 		status: 200,

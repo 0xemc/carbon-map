@@ -1,11 +1,12 @@
 <script lang="ts">
 	import Map from '$lib/Map/Map.svelte';
 	import { Card } from 'flowbite-svelte';
-	import type { MapEvent, MapMetrics } from '$lib/Map/map.types';
+	import type { MapEvent } from '$lib/Map/map.types';
 	import numeral from 'numeral';
+	import type { FetchMetricsResponse } from './api/+server';
 
-	const DEFAULT_METRICS: MapMetrics = {
-		trees: '-',
+	const DEFAULT_METRICS: FetchMetricsResponse = {
+		trees: [],
 		area: '-',
 		coverage: 0,
 		carbon: 0
@@ -31,9 +32,14 @@
 			return numeral(carbon).format('0,0');
 		}
 	}
+
+	let markers: [number, number][] = [];
+	$: markers = metrics.trees.map(({ lon, lat }) => [lon, lat]);
+	console.log(markers);
 </script>
 
 <Map
+	{markers}
 	handlers={[
 		[['draw.create', 'draw.update'], handleUpdate],
 		[

@@ -8,23 +8,29 @@
 
 	export let handlers: [string[], MapeEventHandler][] = [];
 	export let markers: [number, number][] = [];
+	export let sources: [string, mapboxgl.AnySourceData][] = [];
+	export let layers: mapboxgl.AnyLayer[] = [];
 
 	let map: mapboxgl.Map;
 	let markersOnMap: mapboxgl.Marker[] = [];
 
 	onMount(() => {
 		map = init('map');
-
+		map.on('load', () => {
+			sources.map(([name, source]) => map.addSource(name, source));
+			layers.map((layer) => map.addLayer(layer));
+		});
 		handlers.map(([events, handler]) => events.map((event) => map.on(event, handler)));
 	});
+
 	$: {
 		// Remove existing markers
 		markersOnMap.forEach((marker) => marker.remove());
 
 		// Add new markers
-		markersOnMap = markers.map(([lng, lat]) => {
-			return new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-		});
+		markersOnMap = markers.map(([lng, lat]) =>
+			new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map)
+		);
 	}
 </script>
 

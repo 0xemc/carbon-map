@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Map from '$lib/Map/Map.svelte';
-	import { Card } from 'flowbite-svelte';
+	import { Card, Checkbox, Label, Select } from 'flowbite-svelte';
 	import type { MapEvent } from '$lib/Map/map.types';
 	import numeral from 'numeral';
 	import type { FetchMetricsResponse } from './api/+server';
+	import { NEW_NORFOLK_BOUNDING_BOX } from '$lib/constants/bounding_boxes';
 
 	const DEFAULT_METRICS: FetchMetricsResponse = {
 		trees: [],
@@ -13,9 +14,11 @@
 	};
 
 	let metrics = DEFAULT_METRICS;
+	let segment: string;
 
 	const handleUpdate = (e: MapEvent) => {
 		const coords = e.features?.at(0)?.geometry.coordinates;
+		console.log(coords);
 		fetchMetrics(coords);
 	};
 
@@ -34,12 +37,42 @@
 	}
 
 	let markers: [number, number][] = [];
+	let layers: mapboxgl.AnyLayer[] = [
+		{
+			id: 'new_norfolk',
+			type: 'fill',
+			source: 'new_norfolk', // reference the data source
+			layout: {},
+			paint: {
+				'fill-color': '#0080ff', // blue color fill
+				'fill-opacity': 0.5
+			}
+		}
+	];
+	let sources: [string, mapboxgl.AnySourceData][] = [
+		[
+			'new_norfolk',
+			{
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					geometry: {
+						type: 'Polygon',
+						// These coordinates outline Maine.
+						coordinates: [NEW_NORFOLK_BOUNDING_BOX]
+					}
+				}
+			}
+		]
+	];
+
 	$: markers = metrics.trees.map(({ lon, lat }) => [lon, lat]);
-	console.log(markers);
 </script>
 
 <Map
 	{markers}
+	{layers}
+	{sources}
 	handlers={[
 		[['draw.create', 'draw.update'], handleUpdate],
 		[
@@ -121,6 +154,18 @@
 			</div>
 		</div>
 		<hr class="border-" />
+		<Label>
+			<h4 class="text-sm text font-semibold tracking-tight text-[12px]">SEGMENT</h4>
+			<Select
+				size="sm"
+				class="mt-2"
+				items={[
+					{ value: 'new_norfolk', name: 'New Norfolk' },
+					{ value: 'mt_wellington', name: 'Mt Wellington' }
+				]}
+				bind:value={segment}
+			/>
+		</Label>
 	</Card>
 </div>
 

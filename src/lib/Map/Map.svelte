@@ -6,6 +6,7 @@
 	import type { MapeEventHandler } from './map.types';
 	import mapboxgl from 'mapbox-gl';
 
+	export let flyTo: [number, number] = [0, 0];
 	export let handlers: [string[], MapeEventHandler][] = [];
 	export let markers: [number, number][] = [];
 	export let sources: [string, mapboxgl.AnySourceData][] = [];
@@ -21,6 +22,7 @@
 			layers.map((layer) => map.addLayer(layer));
 		});
 		handlers.map(([events, handler]) => events.map((event) => map.on(event, handler)));
+		if (flyTo) map.flyTo({ center: flyTo });
 	});
 
 	$: {

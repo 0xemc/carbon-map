@@ -3,7 +3,6 @@
 	import numeral from 'numeral';
 	import type { FetchMetricsResponse } from '../../../routes/api/+server';
 
-	let segment: string;
 	export let metrics: FetchMetricsResponse;
 
 	function formatCarbon(carbon: number) {
@@ -84,17 +83,4 @@
 			</span>
 		</div>
 	</div>
-	<hr class="border-" />
-	<Label>
-		<h4 class="text-sm text font-semibold tracking-tight text-[12px]">SEGMENT</h4>
-		<Select
-			size="sm"
-			class="mt-2"
-			items={[
-				{ value: 'new_norfolk', name: 'New Norfolk' },
-				{ value: 'mt_wellington', name: 'Mt Wellington' }
-			]}
-			bind:value={segment}
-		/>
-	</Label>
 </Card>

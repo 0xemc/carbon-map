@@ -1,5 +1,5 @@
-export async function load({ fetch }) {
-	const res = await fetch('/api/segments');
+export async function load(event) {
+	const res = await event.fetch('/api/segments');
 	if (res.ok) {
 		const segments = await res.json();
 		return { segments };

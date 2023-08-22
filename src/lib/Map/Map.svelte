@@ -4,16 +4,12 @@
 	import { onMount } from 'svelte';
 	import init from './map';
 	import type { MapeEventHandler } from './map.types';
-	import mapboxgl from 'mapbox-gl';
-
 	export let flyTo: [number, number] = [0, 0];
-	export let handlers: [string[], MapeEventHandler][] = [];
-	export let markers: [number, number][] = [];
-	export let sources: [string, mapboxgl.AnySourceData][] = [];
+	export let handlers: [string[], MapeEventHandler][];
+	export let sources: [string, mapboxgl.AnySourceData][];
 	export let layers: mapboxgl.AnyLayer[] = [];
 
 	let map: mapboxgl.Map;
-	let markersOnMap: mapboxgl.Marker[] = [];
 
 	onMount(() => {
 		map = init('map');
@@ -26,13 +22,20 @@
 	});
 
 	$: {
-		// Remove existing markers
-		markersOnMap.forEach((marker) => marker.remove());
-
-		// Add new markers
-		markersOnMap = markers.map(([lng, lat]) =>
-			new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map)
-		);
+		if (map && map.isStyleLoaded()) {
+			layers.forEach((layer) => {
+				if (map.getLayer(layer.id)) {
+					map.removeLayer(layer.id);
+				}
+			});
+			sources.forEach(([name, source]) => {
+				if (map?.getSource(name)) {
+					map.removeSource(name);
+				}
+			});
+			sources.forEach(([name, source]) => map?.addSource(name, source));
+			layers.forEach((layer) => map.addLayer(layer));
+		}
 	}
 </script>
 

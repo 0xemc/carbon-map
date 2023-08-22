@@ -24,38 +24,62 @@
 	}));
 	let focusedSegment: SelectOptionType = segmentOptions[0];
 	let metrics = DEFAULT_METRICS;
-	let markers: [number, number][] = [];
-	let layers: mapboxgl.AnyLayer[] = [];
+	let layers: mapboxgl.AnyLayer[];
 	let sources: [string, mapboxgl.AnySourceData][] = [];
 
 	const handleUpdate = (e: MapEvent) => {
 		const coords = e.features?.at(0)?.geometry.coordinates;
-		console.log(coords);
 		fetchMetrics(coords);
 	};
 
 	const fetchMetrics = async (coords: any) => {
 		const resp = await fetch('/api', { method: 'POST', body: JSON.stringify(coords) });
 		metrics = await resp.json();
-		console.log(metrics);
 	};
 
-	$: markers = metrics.trees.map(({ lon, lat }) => [lon, lat]);
-	$: sources = data.segments.map((segment) => [segment.id, toGeoJson(segment.data)]);
-	$: layers = data.segments.map((segment) => ({
-		id: segment.id,
-		type: 'fill',
-		source: segment.id, // reference the data source
-		layout: {},
-		paint: {
-			'fill-color': '#0080ff', // blue color fill
-			'fill-opacity': 0.5
-		}
-	}));
+	$: {
+		let segment_sources = data.segments.map((segment) => [segment.id, toGeoJson(segment.data)]);
+		let tree_source = [
+			'trees',
+			{
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					properties: {},
+					geometry: {
+						type: 'MultiPoint',
+						coordinates: metrics.trees.map(({ lon, lat }) => [lon, lat])
+					}
+				}
+			}
+		];
+		sources = [...(segment_sources ?? []), tree_source];
+
+		let segment_layers = data.segments.map((segment) => ({
+			id: segment.id,
+			type: 'fill',
+			source: segment.id, // reference the data source
+			layout: {},
+			paint: {
+				'fill-color': '#0080ff', // blue color fill
+				'fill-opacity': 0.5
+			}
+		}));
+
+		let tree_layer = {
+			id: 'tree-layer',
+			type: 'circle',
+			source: 'trees',
+			paint: {
+				'circle-radius': metrics.trees.length > 0 ? 2 : 0, // adjust based on your needs
+				'circle-color': '#FFF' // adjust based on your needs
+			}
+		};
+		layers = [...(segment_layers ?? []), tree_layer];
+	}
 </script>
 
 <Map
-	{markers}
 	{layers}
 	{sources}
 	flyTo={focusedSegment.center}

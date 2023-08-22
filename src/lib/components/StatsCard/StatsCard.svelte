@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Card, Label, Select } from 'flowbite-svelte';
+	import { Card } from 'flowbite-svelte';
 	import numeral from 'numeral';
 	import type { FetchMetricsResponse } from '../../../routes/api/+server';
 

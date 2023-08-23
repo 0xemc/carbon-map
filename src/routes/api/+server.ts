@@ -4,13 +4,10 @@ import * as turf from '@turf/turf';
 import { pipe } from 'fp-ts/lib/function';
 import pg from 'pg';
 
-const POST_GRES_URL = import.meta.env.VITE_API_NEON_URL;
+const POST_GRES_URL = import.meta.env.VITE_API_SUPABASE_POSTGRES_URL;
 
 const pool = new pg.Pool({
-	ssl: {
-		rejectUnauthorized: false
-	},
-	connectionString: `${POST_GRES_URL}?sslmode=require`
+	connectionString: `${POST_GRES_URL}`
 });
 
 // A rough estimate of carbon locked in an area of a forest **
@@ -46,6 +43,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			'Content-Type': 'application/json'
 		}
 	};
+
 	const coords: [number, number][][] = await request.json();
 
 	const polygon = coords
@@ -62,7 +60,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const seed = random(0.3, 0.6);
 	const area = pipe(coords, turf.polygon, turf.area);
 	const coverage = (seed * 100).toFixed(1);
-	const trees = db_resp.rows;
+	const trees = db_resp.rows ?? [];
 	const carbon = (CO2_M2_ESTIMATE * area) / Number(coverage) / 1000; //Divide by 1000 to get from kg to tons
 
 	const result = {

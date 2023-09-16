@@ -17,12 +17,12 @@
 	};
 
 	export let data;
+
 	let segmentOptions = data.segments.map((segment) => ({
-		value: segment.id,
-		name: segment.id,
-		center: segment.data[0]
+		value: { ...segment, center: segment.data[0] },
+		name: segment.id
 	}));
-	let focusedSegment: SelectOptionType = segmentOptions[0];
+	let focusedSegment = segmentOptions[0];
 	let metrics = DEFAULT_METRICS;
 	let layers: mapboxgl.AnyLayer[];
 	let sources: [string, mapboxgl.AnySourceData][] = [];
@@ -48,7 +48,7 @@
 					properties: {},
 					geometry: {
 						type: 'MultiPoint',
-						coordinates: metrics.trees.map(({ lon, lat }) => [lon, lat])
+						coordinates: metrics.trees?.map(({ lon, lat }) => [lon, lat])
 					}
 				}
 			}
@@ -71,8 +71,8 @@
 			type: 'circle',
 			source: 'trees',
 			paint: {
-				'circle-radius': metrics.trees.length > 0 ? 2 : 0, // adjust based on your needs
-				'circle-color': '#FFF' // adjust based on your needs
+				'circle-radius': metrics.trees?.length > 0 ? 2 : 0,
+				'circle-color': '#FFF'
 			}
 		};
 		layers = [...(segment_layers ?? []), tree_layer];
@@ -96,8 +96,8 @@
 <div id="overlay" class="p-8">
 	<StatsCard {metrics} />
 </div>
-<div class=" fixed left-1/2 transform -translate-x-1/2 searchbar w-500">
-	<div class="grid grid-flow-col gap-1">
+<div class=" fixed left-1/2 transform -translate-x-1/2 options w-500">
+	<div class="search grid grid-flow-col gap-1">
 		<Search on:change={console.log} size="md" /><Button class="!p-2.5">
 			<Icon name="search-outline" class="w-5 h-5" />
 		</Button>
@@ -116,7 +116,10 @@
 		top: 0;
 		left: 0;
 	}
-	.searchbar {
+	.options {
 		top: 15px;
+	}
+	.search {
+		display: none;
 	}
 </style>

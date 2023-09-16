@@ -10,7 +10,6 @@
 	export let layers: mapboxgl.AnyLayer[] = [];
 
 	let map: mapboxgl.Map;
-
 	onMount(() => {
 		map = init('map');
 		map.on('load', () => {
@@ -18,8 +17,12 @@
 			layers.map((layer) => map.addLayer(layer));
 		});
 		handlers.map(([events, handler]) => events.map((event) => map.on(event, handler)));
-		if (flyTo) map.flyTo({ center: flyTo });
 	});
+	$: {
+		if (map && map.isStyleLoaded() && flyTo) {
+			map.flyTo({ center: flyTo, zoom: 12 });
+		}
+	}
 
 	$: {
 		if (map && map.isStyleLoaded()) {

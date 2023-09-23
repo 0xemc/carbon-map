@@ -26,16 +26,23 @@
 
 	$: {
 		if (map && map.isStyleLoaded()) {
+			// Remove existing layers
 			layers.forEach((layer) => {
 				if (map.getLayer(layer.id)) {
 					map.removeLayer(layer.id);
 				}
 			});
-			sources.forEach(([name, source]) => {
-				if (map?.getSource(name)) {
-					map.removeSource(name);
-				}
+
+			// After all layers are removed, remove the sources
+			setTimeout(() => {
+				sources.forEach(([name, source]) => {
+					if (map?.getSource(name)) {
+						map.removeSource(name);
+					}
+				});
 			});
+
+			// Add sources and layers back to the map
 			sources.forEach(([name, source]) => map?.addSource(name, source));
 			layers.forEach((layer) => map.addLayer(layer));
 		}

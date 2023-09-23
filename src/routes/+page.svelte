@@ -2,12 +2,10 @@
 	import Map from '$lib/Map/Map.svelte';
 	import type { MapEvent } from '$lib/Map/map.types';
 	import StatsCard from '$lib/components/StatsCard/StatsCard.svelte';
-	import { NEW_NORFOLK_BOUNDING_BOX } from '$lib/constants/bounding_boxes';
 	import { toGeoJson } from '$lib/utils/geo.utils';
 	import { Button, Label, Search, Select } from 'flowbite-svelte';
 	import { Icon } from 'flowbite-svelte-icons';
 	import type { FetchMetricsResponse } from './api/+server';
-	import type { SelectOptionType } from 'flowbite-svelte/dist/types';
 
 	const DEFAULT_METRICS: FetchMetricsResponse = {
 		trees: [],
@@ -20,7 +18,8 @@
 
 	let segmentOptions = data.segments.map((segment) => ({
 		value: { ...segment, center: segment.data[0] },
-		name: segment.id
+		name: segment.id,
+		id: segment.id
 	}));
 	let focusedSegment = segmentOptions[0];
 	let metrics = DEFAULT_METRICS;

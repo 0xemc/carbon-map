@@ -1,12 +1,4 @@
-import type { BoundingBox } from '$lib/types/geo.types';
-
-export const toGeoJson = (bb: BoundingBox): mapboxgl.AnySourceData => ({
+export const toGeoJson = (data: any): mapboxgl.AnySourceData => ({
 	type: 'geojson',
-	data: {
-		type: 'Feature',
-		geometry: {
-			type: 'Polygon',
-			coordinates: [bb]
-		}
-	}
+	data
 });

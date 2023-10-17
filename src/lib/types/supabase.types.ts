@@ -11,22 +11,22 @@ export interface Database {
     Tables: {
       segments: {
         Row: {
-          data: number[] | null
           description: string | null
+          geojson: Json | null
+          geom: unknown | null
           id: string
-          name: string | null
         }
         Insert: {
-          data?: number[] | null
           description?: string | null
+          geojson?: Json | null
+          geom?: unknown | null
           id?: string
-          name?: string | null
         }
         Update: {
-          data?: number[] | null
           description?: string | null
+          geojson?: Json | null
+          geom?: unknown | null
           id?: string
-          name?: string | null
         }
         Relationships: []
       }

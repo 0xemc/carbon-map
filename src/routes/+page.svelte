@@ -6,6 +6,7 @@
 	import { Button, Label, Search, Select } from 'flowbite-svelte';
 	import { Icon } from 'flowbite-svelte-icons';
 	import type { FetchMetricsResponse } from './api/+server';
+	import { centroid } from '@turf/turf';
 
 	const DEFAULT_METRICS: FetchMetricsResponse = {
 		trees: [],
@@ -15,9 +16,13 @@
 	};
 
 	export let data;
+	const { segments = [] } = data;
+	console.log(segments);
 
-	let segmentOptions = data.segments.map((segment) => ({
-		value: { ...segment, center: segment.data[0] },
+	console.log(centroid(segments?.[1].geom).geometry.coordinates);
+
+	let segmentOptions = segments?.map((segment) => ({
+		value: { ...segment, center: centroid(segment.geom).geometry.coordinates },
 		name: segment.id,
 		id: segment.id
 	}));
@@ -37,7 +42,7 @@
 	};
 
 	$: {
-		let segment_sources = data.segments.map((segment) => [segment.id, toGeoJson(segment.data)]);
+		let segment_sources = data.segments?.map((segment) => [segment.id, toGeoJson(segment.geojson)]);
 		let tree_source = [
 			'trees',
 			{
@@ -54,16 +59,16 @@
 		];
 		sources = [...(segment_sources ?? []), tree_source];
 
-		let segment_layers = data.segments.map((segment) => ({
-			id: segment.id,
+		let segment_layer = {
+			id: focusedSegment.id,
 			type: 'fill',
-			source: segment.id, // reference the data source
+			source: focusedSegment.id, // reference the data source
 			layout: {},
 			paint: {
 				'fill-color': '#0080ff', // blue color fill
 				'fill-opacity': 0.5
 			}
-		}));
+		};
 
 		let tree_layer = {
 			id: 'tree-layer',
@@ -74,7 +79,7 @@
 				'circle-color': '#FFF'
 			}
 		};
-		layers = [...(segment_layers ?? []), tree_layer];
+		layers = [segment_layer, tree_layer];
 	}
 </script>
 

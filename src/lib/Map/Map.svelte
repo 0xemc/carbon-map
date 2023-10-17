@@ -29,22 +29,27 @@
 			// Remove existing layers
 			layers.forEach((layer) => {
 				if (map.getLayer(layer.id)) {
+					if (map.getSource(layer.id)) {
+						map.removeSource(layer.id);
+					}
 					map.removeLayer(layer.id);
 				}
 			});
 
 			// After all layers are removed, remove the sources
 			setTimeout(() => {
+				// Add sources and layers back to the map
 				sources.forEach(([name, source]) => {
-					if (map?.getSource(name)) {
-						map.removeSource(name);
+					if (!map.getSource(name)) {
+						map?.addSource(name, source);
 					}
 				});
-			});
-
-			// Add sources and layers back to the map
-			sources.forEach(([name, source]) => map?.addSource(name, source));
-			layers.forEach((layer) => map.addLayer(layer));
+				layers.forEach((layer) => {
+					if (!map.getLayer(layer.id)) {
+						map.addLayer(layer);
+					}
+				});
+			}, 0);
 		}
 	}
 </script>

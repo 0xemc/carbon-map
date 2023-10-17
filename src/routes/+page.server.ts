@@ -1,7 +1,9 @@
+import type { Tables } from '$lib/types/database.types.js';
+
 export async function load(event) {
 	const res = await event.fetch('/api/segments');
 	if (res.ok) {
-		const segments = await res.json();
+		const segments: Tables<'segments'>[] = await res.json();
 		return { segments };
 	}
 

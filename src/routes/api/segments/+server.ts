@@ -1,4 +1,4 @@
-import type { RequestHandler } from '@sveltejs/kit';
+import { json, type RequestHandler } from '@sveltejs/kit';
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/types/supabase.types';
@@ -12,5 +12,5 @@ export const GET: RequestHandler = async () => {
 
 	if (error) console.log('Error: ', error);
 
-	return new Response(JSON.stringify(data));
+	return json(data);
 };

@@ -14,7 +14,9 @@ const supabase = createClient<Database>(url, key, {
 export const GET: RequestHandler = async () => {
 	console.debug('Fetch on / route');
 	try {
+		console.time('supabase-query');
 		const { data, error } = await supabase.from('segments').select('*');
+		console.timeEnd('supabase-query');
 		console.debug('Fetch on / route 2');
 		if (error) throw error;
 		console.debug('Fetch on / route 3');

@@ -15,7 +15,7 @@ export const GET: RequestHandler = async () => {
 	try {
 		console.debug('Supabase fetch start');
 		console.time('supabase-query');
-		const { data, error } = await supabase.from('segments').select('*').explain();
+		const { data, error } = await supabase.from('segments').select('*');
 		console.debug('Supabase fetch end');
 		console.timeEnd('supabase-query');
 		if (error) throw error;

@@ -8,9 +8,16 @@ const key = import.meta.env.VITE_SUPABASE_KEY;
 const supabase = createClient<Database>(url, key);
 
 export const GET: RequestHandler = async () => {
-	const { data, error } = await supabase.from('segments').select('*');
+	console.debug('Fetch on / route');
+	try {
+		const { data, error } = await supabase.from('segments').select('*');
+		console.debug('Fetch on / route 2');
+		if (error) throw error;
 
-	if (error) console.log('Error: ', error);
-
-	return json(data);
+		return json(data);
+	} catch (error) {
+		console.debug('Fetch on / route 3');
+		console.error('Error: ', error);
+	}
+	return json({});
 };

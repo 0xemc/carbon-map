@@ -17,9 +17,9 @@
 
 	export let data;
 	const { segments = [] } = data;
-	console.log(segments);
+	console.debug('Segments', segments);
 
-	console.log(centroid(segments?.[1].geom).geometry.coordinates);
+	console.debug('Centroid', centroid(segments?.[1].geom).geometry.coordinates);
 
 	let segmentOptions = segments?.map((segment) => ({
 		value: { ...segment, center: centroid(segment.geom).geometry.coordinates },

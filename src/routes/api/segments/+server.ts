@@ -5,7 +5,11 @@ import type { Database } from '$lib/types/supabase.types';
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_KEY;
-const supabase = createClient<Database>(url, key);
+const supabase = createClient<Database>(url, key, {
+	auth: {
+		persistSession: false
+	}
+});
 
 export const GET: RequestHandler = async () => {
 	console.debug('Fetch on / route');

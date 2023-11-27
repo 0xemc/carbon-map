@@ -17,7 +17,7 @@ export const GET: RequestHandler = async () => {
 		const { data, error } = await supabase.from('segments').select('*');
 		console.debug('Fetch on / route 2');
 		if (error) throw error;
-
+		console.debug('Fetch on / route 3');
 		return json(data);
 	} catch (error) {
 		console.debug('Fetch on / route 3');

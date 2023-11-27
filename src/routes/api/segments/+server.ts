@@ -12,14 +12,13 @@ const supabase = createClient<Database>(url, key, {
 });
 
 export const GET: RequestHandler = async () => {
-	console.debug('Fetch on / route');
 	try {
+		console.debug('Supabase fetch start');
 		console.time('supabase-query');
 		const { data, error } = await supabase.from('segments').select('*').explain();
+		console.debug('Supabase fetch end');
 		console.timeEnd('supabase-query');
-		console.debug('Fetch on / route 2');
 		if (error) throw error;
-		console.debug('Fetch on / route 3');
 		return json(data);
 	} catch (error) {
 		console.debug('Fetch on / route 3');

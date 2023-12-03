@@ -15,7 +15,7 @@ export const GET: RequestHandler = async () => {
 	try {
 		console.debug('Supabase fetch start');
 		console.time('supabase-query');
-		const { data, error } = await supabase.from('segments').select('id,geojson').limit(2);
+		const { data, error } = await supabase.from('segments').select('id,geojson');
 		console.debug('Supabase fetch end');
 		console.timeEnd('supabase-query');
 		if (error) {

@@ -18,7 +18,10 @@ export const GET: RequestHandler = async () => {
 		const { data, error } = await supabase.from('segments').select('*');
 		console.debug('Supabase fetch end');
 		console.timeEnd('supabase-query');
-		if (error) throw error;
+		if (error) {
+			console.error('Error', error);
+			throw error;
+		}
 		return json(data);
 	} catch (error) {
 		console.debug('Fetch on / route 3');

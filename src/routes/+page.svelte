@@ -19,10 +19,8 @@
 	const { segments = [] } = data;
 	console.debug('Segments', segments);
 
-	console.debug('Centroid', centroid(segments?.[1].geom).geometry.coordinates);
-
 	let segmentOptions = segments?.map((segment) => ({
-		value: { ...segment, center: centroid(segment.geom).geometry.coordinates },
+		value: { ...segment, center: centroid(segment.geojson).geometry.coordinates },
 		name: segment.id,
 		id: segment.id
 	}));
